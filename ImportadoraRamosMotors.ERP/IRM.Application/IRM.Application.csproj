@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IMP.Inventory\IRM.Core.Inventory.csproj" />
+    <ProjectReference Include="..\IRM.Core.Organization\IRM.Core.Organization.csproj" />
+    <ProjectReference Include="..\IRM.Core.Purchasing\IRM.Core.Purchasing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Inventory\Items\MotorcycleTransferOrder\DTOs\" />
+    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Interfaces\" />
+    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Mappers\" />
+    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Services\" />
+    <Folder Include="Inventory\Items\MotorcycleBrand\" />
+    <Folder Include="Inventory\Items\MotorcycleModel\" />
+    <Folder Include="Inventory\Items\MotorcycleColor\" />
+    <Folder Include="Inventory\Items\MotorcycleInspection\" />
+  </ItemGroup>
+
+</Project>
