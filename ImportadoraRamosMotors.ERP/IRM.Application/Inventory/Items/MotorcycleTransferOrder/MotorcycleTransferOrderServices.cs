@@ -26,7 +26,7 @@ public class MotorcycleTransferOrderServices(IMotorcycleTransferOrderReadReposit
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        if (dto.Items == null || !dto.Items.Any())
+        if (dto.Items == null || dto.Items.Count == 0)
             throw new ArgumentException("La orden de transferencia debe contener al menos un item.");
 
         // Validar que no haya motocicletas duplicadas
@@ -36,7 +36,7 @@ public class MotorcycleTransferOrderServices(IMotorcycleTransferOrderReadReposit
             .Select(g => g.Key)
             .ToList();
 
-        if (duplicatedIds.Any())
+        if (duplicatedIds.Count != 0)
             throw new InvalidOperationException($"Existen motocicletas duplicadas en la orden: {string.Join(", ", duplicatedIds)}");
 
         var entity = MotorcycleTransferOrderEntity.Create(
@@ -55,7 +55,6 @@ public class MotorcycleTransferOrderServices(IMotorcycleTransferOrderReadReposit
         return entity.Id;
 
     }
-    
     public async Task MarkAsSent(Guid id, string sentBy)
     {
         var entity = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
@@ -80,21 +79,6 @@ public class MotorcycleTransferOrderServices(IMotorcycleTransferOrderReadReposit
 
         await _writeRepository.UpdateAsync(entity);
     }
-    public async Task MarkAsActive(Guid id)
-    {
-        var entity = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
-
-        entity.MarkAsActive();
-
-        await _writeRepository.UpdateAsync(entity);
-    }
-    public async Task MarkAsInactive(Guid id)
-    {
-        var entity = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
-
-        entity.MarkAsInactive();
-
-        await _writeRepository.UpdateAsync(entity);
-    }
+   
     #endregion
 }

@@ -5,20 +5,18 @@ using IRM.Core.Purchasing.Errors;
 
 namespace IRM.Core.Purchasing.PurcharseOrders;
 
-public class PurchaseOrder : EntityBase
+public class PurcharseOrderEntity : EntityBase
 {
 
-    public string Code { get; private set; }                       // Código o correlativo 
+    public string Code { get; private set; }    
     public DateTime? ReceivedAt { get; private set; }
-    public PurchaseOrderStatusEnum Status { get; private set; }    // Estado de la orden 
-    public string? ReceivedBy { get; private set; }                // Usuario que recibe
-    public IReadOnlyCollection<PurchaseOrderItem> Items => _items.AsReadOnly();
+    public PurchaseOrderStatusEnum Status { get; private set; }     
+    public string? ReceivedBy { get; private set; }               
+    public IReadOnlyCollection<PurcharseOrderItemEntity> Items => _items.AsReadOnly();
 
-    private readonly List<PurchaseOrderItem> _items = [];
+    private readonly List<PurcharseOrderItemEntity> _items = [];
 
-    private PurchaseOrder() { }
-
-    private PurchaseOrder(string code, Guid createdBy)
+    private PurcharseOrderEntity(string code, Guid createdBy)
     {
         Id = Guid.NewGuid();
         Code = code;
@@ -28,9 +26,9 @@ public class PurchaseOrder : EntityBase
         Validate();
     }
 
-    public static PurchaseOrder Create(string code, Guid createdBy)
+    public static PurcharseOrderEntity Create(string code, Guid createdBy)
     {
-        return new PurchaseOrder(code, createdBy);
+        return new PurcharseOrderEntity(code, createdBy);
     }
 
     public void AddItem(Guid itemId, int quantity, decimal unitPrice)
@@ -41,7 +39,7 @@ public class PurchaseOrder : EntityBase
         if (_items.Exists(i => i.MotorcycleUnitId == itemId))
             throw new ValidationException(PurchaseOrderErrors.DuplicateItemInOrder);
 
-        _items.Add(PurchaseOrderItem.Create(Id, itemId, quantity, unitPrice));
+        _items.Add(PurcharseOrderItemEntity.Create(Id, itemId, quantity, unitPrice));
     }
     public void MarkAsReceived(string receivedBy)
     {
@@ -52,10 +50,7 @@ public class PurchaseOrder : EntityBase
         ReceivedBy = receivedBy;
         Status = PurchaseOrderStatusEnum.Received;
     }
-    public override void MarkAsActive() => IsActive = true;
-
-    public override void MarkAsInactive() => IsActive = false;
-
+ 
     public override void Validate()
     {
         if (string.IsNullOrWhiteSpace(Code))

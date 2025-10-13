@@ -2,22 +2,22 @@
 
 namespace IRM.Core.Inventory.Warehouses;
 
-public class Warehouse
+public class WarehouseEntity
 {
     public Guid Id { get; private set; }
     public Guid BranchId { get; private set; }
     public string Name { get; private set; }
     public bool IsActive { get; private set; } = true;
 
-    private Warehouse(Guid branchId, string name)
+    private WarehouseEntity(Guid branchId, string name)
     {
         Id = Guid.NewGuid();
         Name = name;
         Validate();
     }
-    public static Warehouse Create(Guid branchId, string name)
+    public static WarehouseEntity Create(Guid branchId, string name)
     {
-        return new Warehouse(branchId, name);
+        return new WarehouseEntity(branchId, name);
     }
     private void Validate()
     {
@@ -28,8 +28,8 @@ public class Warehouse
         if (string.IsNullOrWhiteSpace(Name.Trim()))
             throw new ValidationException($" {string.Format(CommonErrors.RequiredField, "NOMBRE")} - {nameof(Name)}");
     }
-    public void Activate() => IsActive = true;
-    public void Deactivate() => IsActive = false;
+    public void MarkAsActivate() => IsActive = true;
+    public void MarkAsDeactivate() => IsActive = false;
     public void Update(string name)
     {
         Name = name;

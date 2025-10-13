@@ -87,7 +87,5 @@ public class MotorcycleEntity : EntityBase
         Validate();
     }
 
-    public override void MarkAsActive() => IsActive = true;
-
-    public override void MarkAsInactive() => IsActive = false;
+ 
 }

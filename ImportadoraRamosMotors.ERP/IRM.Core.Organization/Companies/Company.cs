@@ -13,7 +13,7 @@ public class Company
     public string Phone { get; private set; }
     public bool IsActive { get; private set; } = true;
 
-    private readonly List<Branch> _branches = new();
+    private readonly List<Branch> _branches = [];
     public IReadOnlyCollection<Branch> Branches => _branches.AsReadOnly();
 
 

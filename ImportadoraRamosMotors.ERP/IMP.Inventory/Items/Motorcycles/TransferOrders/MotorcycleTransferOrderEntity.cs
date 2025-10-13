@@ -81,8 +81,6 @@ public class MotorcycleTransferOrderEntity : EntityBase
         ReceivedBy = receivedBy;
         Status = TransferStatusEnum.Completed;
     }
-
-    public override void MarkAsActive() => IsActive = true;
-    public override void MarkAsInactive() => IsActive = false;
+ 
    
 }

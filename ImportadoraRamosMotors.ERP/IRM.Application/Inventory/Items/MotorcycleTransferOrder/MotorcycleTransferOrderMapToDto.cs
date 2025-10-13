@@ -12,7 +12,6 @@ internal class MotorcycleTransferOrderMapToDto
             Id = entity.Id,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy,
-            IsActive = entity.IsActive,
             Code = entity.Code,
             SourceWarehouseId = entity.SourceWarehouseId,
             TargetWarehouseId = entity.TargetWarehouseId,

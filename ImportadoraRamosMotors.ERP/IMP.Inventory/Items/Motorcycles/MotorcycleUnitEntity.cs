@@ -125,9 +125,7 @@ public class MotorcycleUnitEntity : EntityBase
         EngineNumber = engineNumber;
     }
 
-    public override void MarkAsActive() => IsActive = true;
 
-    public override void MarkAsInactive() => IsActive = false;
 
    
 }
