@@ -12,3 +12,4 @@ public class MotorcycleInspectionDto
     public Guid MotorcycleUnitId { get; set; }
     public Guid WarehouseId { get; set; }
 }
+ 

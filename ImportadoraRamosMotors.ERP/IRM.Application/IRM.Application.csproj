@@ -12,11 +12,4 @@
     <ProjectReference Include="..\IRM.Core.Purchasing\IRM.Core.Purchasing.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Inventory\Items\MotorcycleTransferOrder\DTOs\" />
-    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Interfaces\" />
-    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Mappers\" />
-    <Folder Include="Inventory\Items\MotorcycleTransferOrder\Services\" />
-  </ItemGroup>
-
 </Project>

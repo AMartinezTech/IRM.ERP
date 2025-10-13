@@ -7,21 +7,18 @@ namespace IRM.Core.Inventory.Items.Motorcycles.TransferOrders;
 
 public class MotorcycleTransferOrderEntity : EntityBase
 {
-    public string Code { get; private set; }                     // Código o correlativo de traslado
-    public Guid SourceWarehouseId { get; private set; }          // Origen
-    public Guid TargetWarehouseId { get; private set; }          // Destino
-
-    public DateTime? SentAt { get; private set; }                // Fecha de envío
-    public DateTime? ReceivedAt { get; private set; }            // Fecha de recepción
-    public TransferStatusEnum Status { get; private set; }       // Estado del traslado
-
-    public string? SentBy { get; private set; }                  // Usuario que despacha
-    public string? ReceivedBy { get; private set; }              // Usuario que recibe
+    public string Code { get; private set; }                    
+    public Guid SourceWarehouseId { get; private set; }         
+    public Guid TargetWarehouseId { get; private set; }         
+    public DateTime? SentAt { get; private set; }               
+    public DateTime? ReceivedAt { get; private set; }           
+    public TransferStatusEnum Status { get; private set; }      
+    public string? SentBy { get; private set; }                 
+    public string? ReceivedBy { get; private set; }             
     public IReadOnlyCollection<MotorcycleTransferItemEntity> Items => _items.AsReadOnly();
 
     private readonly List<MotorcycleTransferItemEntity> _items = [];
-    private MotorcycleTransferOrderEntity() { }
-
+     
     private MotorcycleTransferOrderEntity(string code, Guid sourceWarehouseId, Guid targetWarehouseId, Guid createdBy)
     {
         Id = Guid.NewGuid();
@@ -43,7 +40,6 @@ public class MotorcycleTransferOrderEntity : EntityBase
        
         return new MotorcycleTransferOrderEntity(code, sourceWarehouseId, targetWarehouseId, createdBy);
     }
-
     public void AddItem(Guid motorcycleUnitId)
     {
         if (Status != TransferStatusEnum.Pending)
@@ -54,9 +50,11 @@ public class MotorcycleTransferOrderEntity : EntityBase
 
         _items.Add(MotorcycleTransferItemEntity.Create(Id, motorcycleUnitId));
     }
-
     public void MarkAsSent(string sentBy)
     {
+        if (_items.Count == 0)
+            throw new InvalidOperationException($"{string.Format(CommonErrors.ThereIsNoDetail,"MARCAR COMO ENVIADA")}");
+
         if (Status != TransferStatusEnum.Pending)
             throw new InvalidOperationException(TransferErrors.OnlyPendingTransfersCanBeSent);
 
@@ -64,9 +62,18 @@ public class MotorcycleTransferOrderEntity : EntityBase
         SentBy = sentBy;
         Status = TransferStatusEnum.InTransit;
     }
-
+    public void MarkAsCanceled()
+    {
+        if (Status == TransferStatusEnum.Pending)
+            throw new InvalidOperationException(TransferErrors.OnlyPendingTransfersCanBeCanceled);
+        Status = TransferStatusEnum.Canceled;
+    }
     public void MarkAsReceived(string receivedBy)
     {
+        if (_items.Count == 0)
+            throw new InvalidOperationException($"{string.Format(CommonErrors.ThereIsNoDetail, "MARCAR COMO RECIVIDA")}");
+
+
         if (Status != TransferStatusEnum.InTransit)
             throw new InvalidOperationException(TransferErrors.OnlyInTransitTransfersCanBeReceived);
 

@@ -12,4 +12,5 @@ public static class CommonErrors
     public const string RegisterNotFound = "No se encontró el registro solicitado!";
     public const string NoFilterResults = "No se encontraron resultados!";
     public const string RegisterAlreadyExists = "El registro ya existe.";
+    public const string ThereIsNoDetail = "No se puede realizar {} sin detalles.";
 }
