@@ -1,4 +1,4 @@
-﻿namespace IRM.Core.Inventory.Inerfaces;
+﻿namespace IRM.Core.Inventory.Interfaces;
 
 public interface IActivable
 {

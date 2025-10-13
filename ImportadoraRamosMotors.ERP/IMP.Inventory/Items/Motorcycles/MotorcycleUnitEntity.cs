@@ -12,22 +12,24 @@ public class MotorcycleUnitEntity : EntityBase
     public Guid MotorcycleCatalogId { get; private set; }  // Relationship with Motorcycle
     public string ChassisNumber { get; private set; }
     public string EngineNumber { get; private set; }
-    public MotorcycleUnitStatusEnum Status { get; private set; } = MotorcycleUnitStatusEnum.InWarehouse;
-    public MotorcycleLocation? CurrentLocation { get; private set; } 
-
+    public MotorcycleUnitStatusEnum Status { get; private set; } = MotorcycleUnitStatusEnum.PurchaseOrder;
+    public MotorcycleLocation? CurrentLocation { get; private set; }
+    
+    private readonly List<MotorcycleInspectionEntity> _motorcycleInspection = [];
+    public IReadOnlyCollection<MotorcycleInspectionEntity> MotorcycleInspection => _motorcycleInspection.AsReadOnly();
     private MotorcycleUnitEntity(Guid motorcycleCatalogId, string chassisNumber, string engineNumber)
     {
         Id = Guid.NewGuid();
         MotorcycleCatalogId = motorcycleCatalogId;
         ChassisNumber = chassisNumber;
         EngineNumber = engineNumber;
-        CurrentLocation = MotorcycleLocation.NewMotocicleUnit();
-        Validate();
+        CurrentLocation = MotorcycleLocation.NewMotocicleUnit(); 
     }
     public static MotorcycleUnitEntity Create(Guid motorcycleCatalogId, string chassisNumber, string engineNumber)
     {
         return new MotorcycleUnitEntity(motorcycleCatalogId, chassisNumber, engineNumber);
     }
+    
     // 🚚 Recibida en el almacén principal
     public void ReceiveInMainWarehouse(Guid warehouseId)
     {
@@ -105,7 +107,22 @@ public class MotorcycleUnitEntity : EntityBase
 
         if (string.IsNullOrWhiteSpace(EngineNumber))
             throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "NÚMERO DE MAQUINA")} - {nameof(Color)}");
+       
+        if (MotorcycleInspection ==  null)
+            throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "INSPECCIÓN")} - {nameof(MotorcycleInspection)}");
 
+    }
+    public void EnsureCanBeDeleted()
+    {
+        if (_motorcycleInspection.Count != 0)
+            throw new ValidationException($"{string.Format(CommonErrors.CannotBeDeletedHasMovement, "LA UNIDAD")}");
+    }
+    public void Update(string chassisNumber, string engineNumber)
+    {
+        if (_motorcycleInspection.Count != 0)
+            throw new ValidationException($"{string.Format(CommonErrors.CannotBeModifiedHasMovement, "LA UNIDAD")} ");
+        ChassisNumber = chassisNumber;
+        EngineNumber = engineNumber;
     }
 
     public override void MarkAsActive() => IsActive = true;

@@ -1,5 +1,4 @@
-﻿using IRM.Core.Exceptions;
-using System.Xml.Linq;
+﻿using IRM.Core.Exceptions; 
 
 namespace IRM.Core.Inventory.Items.Motorcycles;
 
@@ -7,13 +6,13 @@ public class MotorcycleInspectionEntity
 {
     public Guid Id { get; private set; }
     public DateTime Date { get; private set; }
+    public Guid MotorcycleUnitId { get; private set; }
     public string PerformedBy { get; private set; }
     public bool Mirrors { get; private set; }
     public bool Battery { get; private set; }
     public bool Tools { get; private set; }
     public string ConditionNotes { get; private set; }
-
-    private MotorcycleInspectionEntity() { }
+     
 
     private MotorcycleInspectionEntity(string performedBy, bool mirrors, bool battery, bool tools, string conditionNotes)
     {

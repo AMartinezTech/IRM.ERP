@@ -2,7 +2,7 @@
 
 namespace IRM.Core.Enums;
 
-public enum MotocicleCondition
+public enum MotorcycleCondition
 {
     [Display(Name = "Nuevo")] 
     New,        // Nuevo
