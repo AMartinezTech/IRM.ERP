@@ -1,28 +1,28 @@
 ﻿using IRM.Core.Exceptions;
 using IRM.Core.Inventory.Items.Motorcycles;
 
-namespace IRM.Application.Inventory.Items.MotorcycleBrand;
+namespace IRM.Application.Inventory.Items.MotorcycleModel;
 
-public class MotorcycleBrandService(IMotorcycleBrandReadRepository readRepository, IMotorcycleBrandWriteRepository writeRepository)
+public class MotorcycleModelServices(IMotorcycleModelReadRepository readRepository, IMotorcycleModelWriteRepository writeRepository)
 {
-    private readonly IMotorcycleBrandReadRepository _readRepository = readRepository;
-    private readonly IMotorcycleBrandWriteRepository _writeRepository = writeRepository;
+    public readonly IMotorcycleModelReadRepository _readRepository = readRepository;
+    public readonly IMotorcycleModelWriteRepository _writeRepository = writeRepository;
 
     #region "Read"
-    public async Task<MotorcycleBrandDto> GetByIdAsync(Guid id)
+    public async Task<MotorcycleModelDto> GetByIdAsync(Guid id)
     {
         var result = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
-        return MotorcycleBrandMapToDto.Single(result);
+        return MotorcycleModelMapToDto.Single(result);
     }
-    public async Task<List<MotorcycleBrandDto>> FilterAsync(Dictionary<string, object?>? filter, Dictionary<string, object?>? search)
+    public async Task<List<MotorcycleModelDto>> FilterAsync(Dictionary<string, object?>? filter, Dictionary<string, object?>? search)
     {
         var result = await _readRepository.FilterAsync(filter, search) ?? throw new ValidationException($"{CommonErrors.NoFilterResults} - Filter");
-        return MotorcycleBrandMapToDto.List(result);
+        return MotorcycleModelMapToDto.List(result);
     }
     #endregion
 
     #region "Write"
-    public async Task<Guid> CreateAsync(MotorcycleBrandDto dto)
+    public async Task<Guid> CreateAsync(MotorcycleModelDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
@@ -30,13 +30,13 @@ public class MotorcycleBrandService(IMotorcycleBrandReadRepository readRepositor
             throw new ValidationException($"{CommonErrors.RegisterAlreadyExists}");
 
 
-        var entity = MotorcycleBrandEntity.Create(dto.Name);
+        var entity = MotorcycleModelEntity.Create(dto.BrandId, dto.Name);
 
         await _writeRepository.CreateAsync(entity);
         return entity.Id;
 
     }
-    public async Task UpdateAsync(MotorcycleBrandDto dto)
+    public async Task UpdateAsync(MotorcycleModelDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 

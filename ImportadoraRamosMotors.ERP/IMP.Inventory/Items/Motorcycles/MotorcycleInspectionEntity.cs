@@ -6,15 +6,16 @@ public class MotorcycleInspectionEntity
 {
     public Guid Id { get; private set; }
     public DateTime Date { get; private set; }
-    public Guid MotorcycleUnitId { get; private set; }
-    public string PerformedBy { get; private set; }
+    public Guid PerformedBy { get; private set; }
     public bool Mirrors { get; private set; }
     public bool Battery { get; private set; }
     public bool Tools { get; private set; }
     public string ConditionNotes { get; private set; }
+    public Guid MotorcycleUnitId { get; private set; }
+    public Guid WarehouseId { get; private set; }
      
 
-    private MotorcycleInspectionEntity(string performedBy, bool mirrors, bool battery, bool tools, string conditionNotes)
+    private MotorcycleInspectionEntity(Guid performedBy, bool mirrors, bool battery, bool tools, string conditionNotes, Guid motorcycleUnitId, Guid warehouseId)
     {
         Id = Guid.NewGuid();
         Date = DateTime.UtcNow;
@@ -23,13 +24,20 @@ public class MotorcycleInspectionEntity
         Battery = battery;
         Tools = tools;
         ConditionNotes = conditionNotes;
+        MotorcycleUnitId = motorcycleUnitId;
+        WarehouseId = warehouseId;
     }
 
-    public static MotorcycleInspectionEntity Create(string performedBy, bool mirrors, bool battery, bool tools, string conditionNotes)
+    public static MotorcycleInspectionEntity Create(Guid performedBy, bool mirrors, bool battery, bool tools, string conditionNotes, Guid motorcycleUnitId, Guid warehouseId)
     {
-        if (string.IsNullOrWhiteSpace(performedBy))
-            throw new ValidationException($" {string.Format(CommonErrors.RequiredField, "INSPECTOR")} - {nameof(performedBy)}");
+        if (performedBy == Guid.Empty)
+            throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "INSPECTOR")} - {nameof(performedBy)}");
 
-        return new MotorcycleInspectionEntity(performedBy, mirrors, battery, tools, conditionNotes);
+        return new MotorcycleInspectionEntity(performedBy, mirrors, battery, tools, conditionNotes, motorcycleUnitId, warehouseId);
+    }
+    
+    public void UpdateNotes(string condictionNotes)
+    {
+        ConditionNotes = condictionNotes;
     }
 }

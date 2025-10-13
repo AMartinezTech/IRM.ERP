@@ -17,9 +17,6 @@
     <Folder Include="Inventory\Items\MotorcycleTransferOrder\Interfaces\" />
     <Folder Include="Inventory\Items\MotorcycleTransferOrder\Mappers\" />
     <Folder Include="Inventory\Items\MotorcycleTransferOrder\Services\" />
-    <Folder Include="Inventory\Items\MotorcycleModel\" />
-    <Folder Include="Inventory\Items\MotorcycleColor\" />
-    <Folder Include="Inventory\Items\MotorcycleInspection\" />
   </ItemGroup>
 
 </Project>
