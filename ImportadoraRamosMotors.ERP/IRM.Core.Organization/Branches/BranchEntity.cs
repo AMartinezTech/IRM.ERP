@@ -2,7 +2,7 @@
 
 namespace IRM.Core.Organization.Branches;
 
-public class Branch
+public class BranchEntity
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; }
@@ -20,7 +20,7 @@ public class Branch
         if (string.IsNullOrWhiteSpace(Address))
             throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "DIRECCIÓN")}  - {nameof(Address)}");
     }
-    private Branch(string name, string address, string email, string phone, Guid companyId)
+    private BranchEntity(string name, string address, string email, string phone, Guid companyId)
     {
 
         if (companyId == Guid.Empty)
@@ -34,9 +34,9 @@ public class Branch
         Validate();
     }
 
-    public static Branch Create(string name, string address, string email, string phone, Guid companyId)
+    public static BranchEntity Create(string name, string address, string email, string phone, Guid companyId)
     {
-        return new Branch(name, address, email, phone, companyId);
+        return new BranchEntity(name, address, email, phone, companyId);
     }
     public void Update(string name, string address, string email, string phone)
     { 

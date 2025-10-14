@@ -3,7 +3,7 @@ using IRM.Core.Organization.Branches;
 
 namespace IRM.Core.Organization.Companies;
 
-public class Company
+public class CompanyEntity
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; }
@@ -13,8 +13,8 @@ public class Company
     public string Phone { get; private set; }
     public bool IsActive { get; private set; } = true;
 
-    private readonly List<Branch> _branches = [];
-    public IReadOnlyCollection<Branch> Branches => _branches.AsReadOnly();
+    private readonly List<BranchEntity> _branches = [];
+    public IReadOnlyCollection<BranchEntity> Branches => _branches.AsReadOnly();
 
 
     private void Validation()
@@ -30,7 +30,7 @@ public class Company
         if (string.IsNullOrWhiteSpace(Phone))
             throw new ValidationException("Phone is required.");
     }
-    private Company(string name, string rnc, string address, string email, string phone)
+    private CompanyEntity(string name, string rnc, string address, string email, string phone)
     {
         Name = name;
         Rnc = rnc;
@@ -40,9 +40,9 @@ public class Company
         Validation();
     }
 
-    public static Company Create(string name, string rnc, string address, string email, string phone)
+    public static CompanyEntity Create(string name, string rnc, string address, string email, string phone)
     {
-        return new Company(name, rnc, address, email, phone);
+        return new CompanyEntity(name, rnc, address, email, phone);
     }
     public void Update(string name, string rnc, string address, string email, string phone)
     {
@@ -53,7 +53,7 @@ public class Company
         Phone = phone;
         Validation();
     }
-    public void AddBranch(Branch branch)
+    public void AddBranch(BranchEntity branch)
     {
         if (branch == null)
             throw new ValidationException("Branch cannot be null.");
