@@ -11,38 +11,59 @@ public class MotorcycleModelServices(IMotorcycleModelReadRepository readReposito
     #region "Read"
     public async Task<MotorcycleModelDto> GetByIdAsync(Guid id)
     {
+        if (id == Guid.Empty)
+            throw new ValidationException($"{string.Format(CommonErrors.InvalidValue, "ID")}  - ID {id}");
+
         var result = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
         return MotorcycleModelMapToDto.Single(result);
     }
-    public async Task<List<MotorcycleModelDto>> FilterAsync(Dictionary<string, object?>? filter, Dictionary<string, object?>? search)
+    public async Task<List<MotorcycleModelDto>> FilterAsync(Dictionary<string, object?>? filters = null, Dictionary<string, object?>? search = null, Dictionary<string, (DateTime? start, DateTime? end)>? dateRanges = null)
     {
-        var result = await _readRepository.FilterAsync(filter, search) ?? throw new ValidationException($"{CommonErrors.NoFilterResults} - Filter");
+        var result = await _readRepository.FilterAsync(filters, search, dateRanges) ?? throw new ValidationException($"{CommonErrors.NoFilterResults} - Filter");
         return MotorcycleModelMapToDto.List(result);
     }
     #endregion
 
     #region "Write"
-    public async Task<Guid> CreateAsync(MotorcycleModelDto dto)
+
+    public async Task<Guid> PersistenceAsync(MotorcycleModelDto dto)
+    {
+        if (dto.Id == Guid.Empty)
+        {
+            return await CreateAsync(dto);
+        }
+        else
+        {
+            await UpdateAsync(dto);
+            return dto.Id;
+        }
+    }
+    private async Task<Guid> CreateAsync(MotorcycleModelDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        if (await _readRepository.ExistsAsync(dto.Name))
-            throw new ValidationException($"{CommonErrors.RegisterAlreadyExists}");
+        var existName = await _readRepository.ExistsAsync(dto.Name, dto.BrandId);
+       
+        if (existName != null)
+        {
+            if (existName.Equals(dto.Name, StringComparison.CurrentCultureIgnoreCase))
+                throw new ValidationException($"{CommonErrors.RegisterAlreadyExists}");
+        }
 
 
-        var entity = MotorcycleModelEntity.Create(dto.BrandId, dto.Name);
+        var entity = MotorcycleModelEntity.Create(dto.Id,dto.BrandId, dto.Name, dto.IsActive);
 
         await _writeRepository.CreateAsync(entity);
         return entity.Id;
 
     }
-    public async Task UpdateAsync(MotorcycleModelDto dto)
+    private async Task UpdateAsync(MotorcycleModelDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
         var entity = await _readRepository.GetByIdAsync(dto.Id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {dto.Id}");
 
-        entity.Update(dto.Name);
+        entity.Update(dto.Name,dto.IsActive);
         await _writeRepository.UpdateAsync(entity);
     }
     public async Task DeleteAsync(Guid id)

@@ -1,5 +1,4 @@
-﻿using IRM.Core.Enums;
-using IRM.Core.Exceptions;
+﻿using IRM.Core.Exceptions;
 using IRM.Core.Inventory.Items.Motorcycles;
 
 namespace IRM.Application.Inventory.Items.Motorcycle;
@@ -15,7 +14,7 @@ public class MotorcycleServices(IMotorcycleReadRepository readRepository, IMotor
         var result = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
         return MotorcycleMapToDto.Single(result);
     }
-    public async Task<List<MotorcycleDto>> FilterAsync(Dictionary<string, object?>? filter = null, Dictionary<string, object?>? search = null)
+    public async Task<List<MotorcycleDto>> FilterAsync(Dictionary<string, object?>? filter, Dictionary<string, object?>? search)
     {
         var result = await _readRepository.FilterAsync(filter, search) ?? throw new ValidationException($"{CommonErrors.NoFilterResults} - Filter");
         return MotorcycleMapToDto.List(result);
@@ -25,67 +24,39 @@ public class MotorcycleServices(IMotorcycleReadRepository readRepository, IMotor
     #region "Write"
     public async Task<Guid> CreateAsync(MotorcycleDto dto)
     {
-
         ArgumentNullException.ThrowIfNull(dto);
 
-        bool exists = await _readRepository.ExistsAsync(
-        dto.Brand,
-        dto.Model,
-        dto.Color,
-        dto.Year,
-        dto.EngineDisplacement);
-
-        if (exists)
+        if (await _readRepository.ExistsByChassisAsync(dto.ChassisNumber, dto.EngineNumber))
             throw new ValidationException($"{CommonErrors.RegisterAlreadyExists}");
 
 
-        if (!Enum.TryParse(dto.Condition, out MotorcycleCondition condition))
-            throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "CONDICIÓN")} - Condition");
-
-
-
         var entity = MotorcycleEntity.Create(
-        dto.Brand,
-        dto.Model,
-        dto.Color,
-        dto.Year,
-        condition,
-        dto.IsImported,
-        dto.EngineDisplacement);
+            dto.MotorcycleCatalogId,
+            dto.ChassisNumber,
+            dto.EngineNumber,
+            dto.IsImported
+            );
 
         await _writeRepository.CreateAsync(entity);
-
         return entity.Id;
+
     }
     public async Task UpdateAsync(MotorcycleDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        var entity = await _readRepository.GetByIdAsync(dto.Id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {dto.Id}");
-
-        if (!Enum.TryParse(dto.Condition, out MotorcycleCondition condition))
-            throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "CONDICIÓN")} - Condition");
-
-        entity.Update(
-            dto.Brand,
-            dto.Model,
-            dto.Color,
-            dto.Year,
-            condition,
-            dto.IsImported,
-            dto.EngineDisplacement
-        );
-
+         var entity = await _readRepository.GetByIdAsync(dto.Id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {dto.Id}");
+         
+        entity.Update(dto.ChassisNumber,dto.EngineNumber, dto.IsImported);
         await _writeRepository.UpdateAsync(entity);
     }
     public async Task DeleteAsync(Guid id)
     {
         var entity = await _readRepository.GetByIdAsync(id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {id}");
-
         entity.EnsureCanBeDeleted();
+        await _writeRepository.DeleteAsync(entity.Id);
 
-        await _writeRepository.DeleteAsync(id);
     }
-
+     
     #endregion
 }

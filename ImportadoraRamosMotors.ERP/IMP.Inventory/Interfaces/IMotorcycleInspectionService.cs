@@ -4,5 +4,5 @@ namespace IRM.Core.Inventory.Interfaces;
 
 public interface IMotorcycleInspectionService
 {
-    void Inspect(MotorcycleUnitEntity unit);
+    void Inspect(MotorcycleEntity unit);
 }

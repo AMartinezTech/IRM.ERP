@@ -5,5 +5,5 @@ namespace IRM.Application.Inventory.Items.MotorcycleModel;
 
 public interface IMotorcycleModelReadRepository : IFilter<MotorcycleModelEntity>, IGetById<MotorcycleModelEntity, Guid>
 {
-    Task<bool> ExistsAsync(string name);
+    Task<string?> ExistsAsync(string name, Guid brandId);
 }

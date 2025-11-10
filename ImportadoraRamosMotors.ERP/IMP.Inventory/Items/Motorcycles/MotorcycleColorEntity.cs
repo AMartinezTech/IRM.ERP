@@ -1,4 +1,5 @@
 ﻿using IRM.Core.Exceptions;
+using IRM.Core.Shared.Utils;
 
 namespace IRM.Core.Inventory.Items.Motorcycles;
 
@@ -8,26 +9,28 @@ public class MotorcycleColorEntity
     public string Name { get; private set; }
     public bool IsActive { get; private set; } = true;
 
-    private MotorcycleColorEntity(string name)
+    private MotorcycleColorEntity(Guid id, string name, bool isActive)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
-        Validate();
+        IsActive = isActive;
+         
     }
-    public static MotorcycleColorEntity Create(string name)
+    public static MotorcycleColorEntity Create(Guid id, string name, bool isActive)
     {
-        return new MotorcycleColorEntity(name);
+        Validate(name);
+        return new MotorcycleColorEntity(GuidID.Generate(id), name,isActive);
     }
-    private void Validate()
+    
+    private static void Validate(string name)
     {
-        if (string.IsNullOrWhiteSpace(Name.Trim()))
+        if (string.IsNullOrWhiteSpace(name.Trim()))
             throw new ValidationException($" {string.Format(CommonErrors.RequiredField, "NOMBRE")} - {nameof(Name)}");
     }
-    public void Activate() => IsActive = true;
-    public void Deactivate() => IsActive = false;
-    public void Update(string name)
+    public void Update(string name, bool isActive)
     {
-        Name = name;
-        Validate();
+        Validate(name);
+        Name = name; 
+        IsActive = isActive;
     }
 }

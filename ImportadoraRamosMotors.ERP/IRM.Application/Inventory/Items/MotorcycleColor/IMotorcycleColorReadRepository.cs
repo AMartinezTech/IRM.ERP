@@ -5,5 +5,6 @@ namespace IRM.Application.Inventory.Items.MotorcycleColor;
 
 public interface IMotorcycleColorReadRepository : IFilter<MotorcycleColorEntity>, IGetById<MotorcycleColorEntity, Guid>
 {
-    Task<bool> ExistsAsync(string name);
+    Task<string?> ExistsAsync(string name);
+
 }

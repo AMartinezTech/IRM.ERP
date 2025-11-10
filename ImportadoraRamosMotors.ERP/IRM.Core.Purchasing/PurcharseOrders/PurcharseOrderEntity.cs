@@ -16,6 +16,8 @@ public class PurcharseOrderEntity : EntityBase
 
     private readonly List<PurcharseOrderItemEntity> _items = [];
 
+    public decimal? Total { get; private set; } 
+
     private PurcharseOrderEntity(string code, Guid createdBy)
     {
         Id = Guid.NewGuid();
@@ -57,5 +59,8 @@ public class PurcharseOrderEntity : EntityBase
             throw new ValidationException("Purchase order code is required.");
         if (CreatedBy == Guid.Empty)
             throw new ValidationException("CreatedBy is required.");
+
+        if (Total == 0)
+            throw new ValidationException("Dont have eny details");
     }
 }

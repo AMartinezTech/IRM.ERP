@@ -5,5 +5,5 @@ namespace IRM.Application.Inventory.Items.MotorcycleBrand;
 
 public interface IMotorcycleBrandReadRepository : IFilter<MotorcycleBrandEntity>, IGetById<MotorcycleBrandEntity, Guid>
 {
-    Task<bool> ExistsAsync(string name);
+    Task<string?> ExistsAsync(string name);
 }

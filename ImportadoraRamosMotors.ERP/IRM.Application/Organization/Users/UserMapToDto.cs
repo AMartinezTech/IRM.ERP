@@ -16,10 +16,13 @@ internal class UserMapToDto
             RoleId = entity.RoleId,
             IsActive = entity.IsActive,
             CreatedAt = entity.CreatedAt,
+            HasGlobalAccess = entity.HasGlobalAccess,
+            BranchId = entity.BranchId,
+
         };
     }
 
-    internal static List<UserDto> List(IEnumerable<UserEntity> entities) 
+    internal static List<UserDto> List(IEnumerable<UserEntity> entities)
     {
         return [.. entities.Select(Single)];
     }

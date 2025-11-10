@@ -12,6 +12,7 @@ public class WarehouseEntity
     private WarehouseEntity(Guid branchId, string name)
     {
         Id = Guid.NewGuid();
+        BranchId = branchId;
         Name = name;
         Validate();
     }

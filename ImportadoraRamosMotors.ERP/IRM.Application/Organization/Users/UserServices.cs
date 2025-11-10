@@ -1,6 +1,4 @@
-﻿using IRM.Application.Organization.Companies;
-using IRM.Core.Exceptions;
-using IRM.Core.Organization.Companies;
+﻿using IRM.Core.Exceptions; 
 using IRM.Core.Organization.Users;
 
 namespace IRM.Application.Organization.Users;
@@ -34,7 +32,7 @@ public class UserServices(IUserReadRepository readRepository, IUserWriteReposito
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        if (await _readRepository.ExistsAsync(dto.Email,dto.Phone))
+        if (await _readRepository.ExistsAsync(dto.Email, dto.Phone))
             throw new ValidationException($"{CommonErrors.RegisterAlreadyExists}");
 
 
@@ -43,7 +41,9 @@ public class UserServices(IUserReadRepository readRepository, IUserWriteReposito
             dto.Name,
             dto.Password ?? string.Empty,
             dto.Phone,
-            dto.RoleId
+            dto.RoleId,
+            dto.BranchId,
+            dto.HasGlobalAccess
             );
 
         await _writeRepository.CreateAsync(entity);
@@ -59,7 +59,9 @@ public class UserServices(IUserReadRepository readRepository, IUserWriteReposito
         entity.Update(
             dto.Name,
             dto.Phone,
-            dto.RoleId);
+            dto.RoleId,
+            dto.HasGlobalAccess,
+            dto.BranchId);
         await _writeRepository.UpdateAsync(entity);
     }
     public async Task MarkAsActiveAsync(UserDto dto)
@@ -78,7 +80,7 @@ public class UserServices(IUserReadRepository readRepository, IUserWriteReposito
 
         var entity = await _readRepository.GetByIdAsync(dto.Id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {dto.Id}");
 
-        entity.MarkAsInative();
+        entity.MarkAsInactive();
         await _writeRepository.UpdateAsync(entity);
     }
     #endregion

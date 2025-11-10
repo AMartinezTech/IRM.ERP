@@ -11,3 +11,7 @@ public class ValidationException(string message) : DomainException(message)
 public class BusinessRuleException(string message) : DomainException(message)
 {
 }
+
+public class UnexpectedDomainException(string message) : DomainException(message)
+{
+}
