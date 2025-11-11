@@ -14,12 +14,13 @@ public static class CoreDependencyInjection
         var url = config["Supabase:Url"] ?? throw new ArgumentNullException(paramName: "url");
         var apiKey = config["Supabase:ApiKey"] ?? throw new ArgumentNullException(paramName: "apiKey");
 
-        // Registramos la fábrica
-        services.AddSingleton<ISupabaseClientFactory>(_ =>
-            new SupabaseClientFactory(url, apiKey));
-
-        services.AddSingleton<ICacheService, CacheService>();
+        // Supabase factory
+        services.AddSingleton<ISupabaseClientFactory>(_ =>  new SupabaseClientFactory(url, apiKey));
         
+        // Memory cache
+        services.AddSingleton<ICacheService, CacheService>();
+
+        DIMotorcycleCatalog.AddService(services);
         DIMotorcycleColor.AddService(services);
         DIMotorcycleBrand.AddService(services);
         DIMotorcycleModel.AddService(services);

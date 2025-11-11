@@ -1,6 +1,4 @@
-﻿using IRM.Core.Inventory.Items.Motorcycles;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using IRM.Core.Inventory.Items.Motorcycles; 
 
 namespace IRM.Infrastructure.Supabase.Inventory.Motorcycle.Catalog;
 
@@ -17,12 +15,16 @@ internal class MotorcycleCatalogMap
             Year = entity.Year,
             Condition = entity.Condition.ToString(),
             EngineDisplacement = entity.EngineDisplacement,
+            Description = entity.Description,
+            IsActive = entity.IsActive,
+            CreatedBy = entity.CreatedBy,
+            CreatedAt = entity.CreatedAt,
         };
     }
 
     internal static MotorcycleCatalogEntity ToEntity(MotorcycleCatalogModel model)
     {
          
-        return MotorcycleCatalogEntity.Create(model.Id, model.BrandId, model.ModelId, model.ColorId, model.Year, model.Condition, model.EngineDisplacement);
+        return MotorcycleCatalogEntity.Create(model.Id, model.BrandId, model.ModelId, model.ColorId, model.Year, model.Condition, model.EngineDisplacement, model.Description,model.IsActive,model.CreatedAt,model.CreatedBy);
     }
 }

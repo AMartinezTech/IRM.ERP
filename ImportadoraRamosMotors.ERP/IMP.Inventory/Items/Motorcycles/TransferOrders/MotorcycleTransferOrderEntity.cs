@@ -30,7 +30,7 @@ public class MotorcycleTransferOrderEntity : EntityBase
         Status = TransferStatusEnum.Pending;
         Validate();
     }
-    public override void Validate()
+    public  void Validate()
     {
         if (SourceWarehouseId == TargetWarehouseId)
             throw new ValidationException(TransferErrors.SourceAndTargetMustBeDifferent);

@@ -29,9 +29,9 @@ public class MotorcycleCatalogServices(IMotorcycleCatalogReadRepository readRepo
         ArgumentNullException.ThrowIfNull(dto);
 
         bool exists = await _readRepository.ExistsAsync(
-        dto.Brand,
-        dto.Model,
-        dto.Color,
+        dto.BrandId,
+        dto.ModelId,
+        dto.ColorId,
         dto.Year,
         dto.EngineDisplacement);
 
@@ -41,12 +41,12 @@ public class MotorcycleCatalogServices(IMotorcycleCatalogReadRepository readRepo
          
 
         var entity = MotorcycleCatalogEntity.Create(dto.Id,
-        dto.Brand,
-        dto.Model,
-        dto.Color,
+        dto.BrandId,
+        dto.ModelId,
+        dto.ColorId,
         dto.Year,
         dto.Condition, 
-        dto.EngineDisplacement);
+        dto.EngineDisplacement, dto.Description,dto.IsActive,dto.CreatedAt,dto.CreatedBy);
 
         await _writeRepository.CreateAsync(entity);
 
@@ -59,9 +59,9 @@ public class MotorcycleCatalogServices(IMotorcycleCatalogReadRepository readRepo
         var entity = await _readRepository.GetByIdAsync(dto.Id) ?? throw new ValidationException($"{CommonErrors.RegisterNotFound}  - ID {dto.Id}");
          
         entity.Update( 
-            dto.Brand,
-            dto.Model,
-            dto.Color,
+            dto.BrandId,
+            dto.ModelId,
+            dto.ColorId,
             dto.Year,
             dto.Condition, 
             dto.EngineDisplacement

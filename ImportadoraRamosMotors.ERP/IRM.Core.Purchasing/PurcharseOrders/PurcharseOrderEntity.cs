@@ -53,7 +53,7 @@ public class PurcharseOrderEntity : EntityBase
         Status = PurchaseOrderStatusEnum.Received;
     }
  
-    public override void Validate()
+    public  void Validate()
     {
         if (string.IsNullOrWhiteSpace(Code))
             throw new ValidationException("Purchase order code is required.");

@@ -9,9 +9,9 @@ internal class MotorcycleCatalogMapToDto
         return new MotorcycleCatalogDto
         {
             Id = entity.Id,
-            Brand = entity.BrandId,
-            Model = entity.ModelId,
-            Color = entity.ColorId,
+            BrandId = entity.BrandId,
+            ModelId = entity.ModelId,
+            ColorId = entity.ColorId,
             Year = entity.Year,
             Condition = entity.Condition.ToString(), 
             EngineDisplacement = entity.EngineDisplacement,

@@ -98,7 +98,7 @@ public class MotorcycleEntity : EntityBase
         Status = MotorcycleUnitStatusEnum.Dismantled;
         CurrentLocation = null;
     }
-    public override void Validate()
+    public  void Validate()
     {
         if (MotorcycleCatalogId == Guid.Empty)
             throw new ValidationException($"{string.Format(CommonErrors.RequiredField, "CATALOGO")} - {nameof(MotorcycleCatalogId)}");
